@@ -8,6 +8,7 @@ using API.Helpers;
 using AutoMapper;
 using API.Entities;
 using API.DTOs;
+using API.SignalR;
 
 namespace API.Extentions
 {
@@ -15,6 +16,7 @@ namespace API.Extentions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration config)
         {
+            services.AddSingleton<PresenceTraker>();
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IPhotoService, PhotoService>();
