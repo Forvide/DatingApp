@@ -22,10 +22,17 @@ namespace API.Data
             _context = context;
         }
 
-        public async Task<MemberDto> GetMemberAsync(string username)
+        public async Task<MemberDto> GetMemberAsync(string username, bool IsCurrentUser)
         {
-            return await _context.Users.Where(x => x.UserName == username)
-                .ProjectTo<MemberDto>(_mapper.ConfigurationProvider)
+            var query = _context.Users.Where(x => x.UserName == username)
+                .ProjectTo<MemberDto>(_mapper.ConfigurationProvider).AsQueryable();
+                
+            if (IsCurrentUser)
+            {
+                query = query.IgnoreQueryFilters();
+            }
+
+            return await query
                 .SingleOrDefaultAsync();
         }
 
