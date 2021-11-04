@@ -52,23 +52,28 @@ namespace API
             app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseHttpsRedirection();
-
+            
+            app.UseRouting();
+            
             app.UseCors(x => x.AllowAnyHeader()
                                 .AllowAnyMethod()
                                 .AllowCredentials()
                                 .WithOrigins("https://localhost:4200"));
 
-            app.UseRouting();
+            
 
             app.UseAuthentication();
-
             app.UseAuthorization();
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<PresenceHub>("hubs/presence");
                 endpoints.MapHub<MessageHub>("hubs/message");
+                endpoints.MapFallbackToController("Index", "Fallback");
             });
         }
     }
